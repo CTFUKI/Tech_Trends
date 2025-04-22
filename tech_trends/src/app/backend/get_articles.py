@@ -10,6 +10,11 @@ app = Flask(__name__)
 CORS(app) 
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
+#Load API Key
+load_dotenv()
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
+print(NEWS_API_KEY)
+
 @app.route('/api/articles', methods=['GET'])
 def get_articles():
     
@@ -18,7 +23,7 @@ def get_articles():
     print("Received search query:", userSearchQuery)  # Log the received query
 
     #Pass API key
-    newsapi = NewsApiClient(api_key='943bdad0d52940b8a58d4ca61bc27f77')
+    newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
     # /v2/everything
     all_articles = newsapi.get_everything(q=userSearchQuery,
@@ -36,7 +41,8 @@ def get_articles():
         articles_info.append({
             'title': article['title'],
             'source': article['source']['name'],
-            'description': article['description']
+            'description': article['description'],
+            'url' : article['url']
         })
 
     print(articles_info)

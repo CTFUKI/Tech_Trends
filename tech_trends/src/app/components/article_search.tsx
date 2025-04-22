@@ -2,9 +2,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+//Create the article interface
+interface Article {
+    title : string;
+    description: string;
+    url: string;
+}
+
 const ArticleSearch: React.FC = () => {
     const [query, setQuery] = useState('');
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState<Article[]>([]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(event.target.value);
@@ -17,15 +24,15 @@ const ArticleSearch: React.FC = () => {
                 params: { query }
             });
             console.log("Articles fetched:", response.data);
-            setArticles(response.data);
+            setArticles(response.data as Article[]);
         } catch (error) {
             console.error("Error fetching articles:", error);
         }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-800">
-            <div className="relative p-8 rounded-lg bg-gray-900 flex items-center">
+        <div className="flex justify-center items-center h-screen bg-gray-800 overflow-hidden">
+            <div className="relative p-8 rounded-lg bg-gray-900 flex items-center overflow-auto max-h-[calc(100vh-64px)]">
                 <input
                     type="text"
                     value={query}
@@ -44,13 +51,14 @@ const ArticleSearch: React.FC = () => {
                     </svg>
                 </div>
             </div>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-auto max-h-[calc(100vh-64px)]">
                 {articles.length > 0 ? (
-                    articles.map((article, index) => (
+                    articles.map((article: Article, index) => (
                         <div key={index} className="bg-gray-700 p-4 rounded-lg shadow-md">
-                            <h2 className="text-xl font-bold text-white">{article.title}</h2>
+                            <a href={article.url} target="_blank" rel="noopener noreferrer">
+                                {article.title}
+                            </a>
                             <p className="text-gray-300">{article.description}</p>
-                            <a href={article.link} className="text-blue-400 hover:underline">Read More</a>
                         </div>
                     ))
                 ) : (
