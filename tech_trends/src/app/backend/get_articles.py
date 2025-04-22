@@ -25,7 +25,14 @@ def get_articles():
     #Pass API key
     newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
-    # /v2/everything
+    #Returns top headlines
+    top_headlines = newsapi.get_top_headlines(q=userSearchQuery,
+                                          sources='bbc-news,the-verge',
+                                          category='tech',
+                                          language='en',
+                                          country='us')
+
+    #Return all news articles
     all_articles = newsapi.get_everything(q=userSearchQuery,
                                         sources='bbc-news,the-verge',
                                         domains='bbc.co.uk,techcrunch.com',
@@ -43,6 +50,12 @@ def get_articles():
             'source': article['source']['name'],
             'description': article['description'],
             'url' : article['url']
+        })
+
+    headlines_info = []
+    for article in headlines_info['articles']:
+        headlines_info.append({
+            
         })
 
     print(articles_info)
