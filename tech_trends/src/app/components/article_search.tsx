@@ -9,26 +9,6 @@ interface Article {
     url: string;
 }
 
-//Create search button flags
-let returnHeadlinesOnly = false;
-let returnAllArticles = false;
-
-//Define flag setter functions
-function SetHeadLinesOnlyFlag(){
-    returnHeadlinesOnly = true;
-    returnAllArticles = false;
-    console.log("Headlines Only Flag set:", returnHeadlinesOnly);
-    console.log("All articles flag: ", returnAllArticles)
-}
-
-function SetAllArticlesFlag(){
-    returnHeadlinesOnly = false;
-    returnAllArticles = true;
-    console.log("All Articles Flag set:", returnAllArticles);
-    console.log("Headlines Only Flag set:", returnHeadlinesOnly);
-
-}
-
 const ArticleSearch: React.FC = () => {
     const [query, setQuery] = useState('');
     const [articles, setArticles] = useState<Article[]>([]);
@@ -41,7 +21,9 @@ const ArticleSearch: React.FC = () => {
         console.log("Sending search query:", query);
         try {
             const response = await axios.get('http://127.0.0.1:5000/api/articles', {
-                params: { query }
+                params: {
+                        query
+                        }
             });
             console.log("Articles fetched:", response.data);
             setArticles(response.data as Article[]);
@@ -51,14 +33,14 @@ const ArticleSearch: React.FC = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-800 overflow-hidden">
-            <div className="relative p-8 rounded-lg bg-gray-900 flex items-center overflow-auto max-h-[calc(100vh-64px)]">
+        <div className="flex flex-col h-screen bg-gray-800 overflow-hidden items-center">
+            <div className="mt-5 mb-5 relative p-8 rounded-lg bg-gray-900 flex items-center overflow-hidden max-h-[64px] shadow-lg">
                 <input
                     type="text"
                     value={query}
                     onChange={handleInputChange}
                     placeholder="Search..."
-                    className="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-blue-500 w-96"
+                    className="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-blue-500 w-full sm:w-96"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -66,14 +48,10 @@ const ArticleSearch: React.FC = () => {
                     </svg>
                 </div>
                 <button 
-                    className={`mr-4 ml-4 px-4 py-2 rounded-full transition duration-200 ${returnHeadlinesOnly ? 'bg-red-600' : 'bg-blue-500'} text-white hover:bg-green-600`}
-                    onClick={SetHeadLinesOnlyFlag}
-                    >Headlines
-                </button>
-                <button 
-                    className={`mr-4 ml-0.1 px-4 py-2 rounded-full transition duration-200 ${returnAllArticles ? 'bg-blue-600' : 'bg-red-500'} text-white hover:bg-green -600`}
-                    onClick={SetAllArticlesFlag}
-                    >All Articles
+                    className="ml-4 mr-4 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                    onClick={handleSearch}
+                >
+                    Search
                 </button>
             </div>
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-auto max-h-[calc(100vh-64px)]">

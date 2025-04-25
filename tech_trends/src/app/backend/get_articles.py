@@ -20,21 +20,13 @@ def get_articles():
     
     #Get the user search query
     userSearchQuery = request.args.get('query')
-    print("Received search query:", userSearchQuery)  # Log the received query
+    print("Received search query:", userSearchQuery)
 
-    #Pass API key
+    #Pass API key from .env
     newsapi = NewsApiClient(api_key=NEWS_API_KEY)
-
-    #Returns top headlines
-    top_headlines = newsapi.get_top_headlines(q=userSearchQuery,
-                                          sources='bbc-news,the-verge',
-                                          category='tech',
-                                          language='en',
-                                          country='us')
-
-    #Return all news articles
+            
     all_articles = newsapi.get_everything(q=userSearchQuery,
-                                        sources='bbc-news,the-verge',
+                                        sources='bbc-news,the-verge,TechRadar,Wired',
                                         domains='bbc.co.uk,techcrunch.com',
                                         from_param='2025-03-30',
                                         to='2025-04-21',
@@ -42,7 +34,7 @@ def get_articles():
                                         sort_by='relevancy',
                                         page=2)
 
-    # Extract relevant information from articles
+    #Extract the 
     articles_info = []
     for article in all_articles['articles']:
         articles_info.append({
@@ -52,16 +44,7 @@ def get_articles():
             'url' : article['url']
         })
 
-    headlines_info = []
-    for article in headlines_info['articles']:
-        headlines_info.append({
-            
-        })
-
-    print(articles_info)
-
-    return jsonify(articles_info)  # Return only the extracted information
-
+    return jsonify(articles_info)
 
 # Run the app
 if __name__ == "__main__":
