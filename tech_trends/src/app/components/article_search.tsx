@@ -19,11 +19,15 @@ const ArticleSearch: React.FC = () => {
 
     const handleSearch = async () => {
         console.log("Sending search query:", query);
+        if (!query) {
+            console.error("Query is empty. Please enter a search term.");
+            return; 
+        }
         try {
             const response = await axios.get('http://127.0.0.1:5000/api/articles', {
                 params: {
-                        query
-                        }
+                    query
+                }
             });
             console.log("Articles fetched:", response.data);
             setArticles(response.data as Article[]);

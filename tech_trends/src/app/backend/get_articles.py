@@ -13,10 +13,11 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 #Load API Key
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-print(NEWS_API_KEY)
 
 @app.route('/api/articles', methods=['GET'])
 def get_articles():
+
+    print('hello')
     
     #Get the user search query
     userSearchQuery = request.args.get('query')
@@ -24,12 +25,13 @@ def get_articles():
 
     #Pass API key from .env
     newsapi = NewsApiClient(api_key=NEWS_API_KEY)
+    print(newsapi)
             
     all_articles = newsapi.get_everything(q=userSearchQuery,
                                         sources='bbc-news,the-verge,TechRadar,Wired',
                                         domains='bbc.co.uk,techcrunch.com',
-                                        from_param='2025-03-30',
-                                        to='2025-04-21',
+                                        from_param='2025-04-01',
+                                        to='2025-04-30',
                                         language='en',
                                         sort_by='relevancy',
                                         page=2)
