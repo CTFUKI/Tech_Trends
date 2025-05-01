@@ -16,16 +16,12 @@ NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
 @app.route('/api/articles', methods=['GET'])
 def get_articles():
-
-    print('hello')
     
     #Get the user search query
     userSearchQuery = request.args.get('query')
-    print("Received search query:", userSearchQuery)
 
     #Pass API key from .env
     newsapi = NewsApiClient(api_key=NEWS_API_KEY)
-    print(newsapi)
             
     all_articles = newsapi.get_everything(q=userSearchQuery,
                                         sources='bbc-news,the-verge,TechRadar,Wired',

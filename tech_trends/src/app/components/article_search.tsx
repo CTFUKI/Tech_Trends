@@ -12,6 +12,7 @@ interface Article {
 const ArticleSearch: React.FC = () => {
     const [query, setQuery] = useState('');
     const [articles, setArticles] = useState<Article[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(event.target.value);
@@ -23,6 +24,7 @@ const ArticleSearch: React.FC = () => {
             console.error("Query is empty. Please enter a search term.");
             return; 
         }
+        setLoading(true)
         try {
             const response = await axios.get('http://127.0.0.1:5000/api/articles', {
                 params: {
@@ -33,6 +35,8 @@ const ArticleSearch: React.FC = () => {
             setArticles(response.data as Article[]);
         } catch (error) {
             console.error("Error fetching articles:", error);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -54,10 +58,20 @@ const ArticleSearch: React.FC = () => {
                 <button 
                     className="ml-4 mr-4 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
                     onClick={handleSearch}
+                    disabled={loading}
                 >
-                    Search
+                    {loading ? (
+                        <span className='loader'></span>
+                    ) : (
+                        'Search'
+                    )}
                 </button>
             </div>
+            {loading && (
+                <div className="mt-2 flex items-center justify-center">
+                    <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                </div>
+            )}
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-auto max-h-[calc(100vh-64px)]">
                 {articles.length > 0 ? (
                     articles.map((article: Article, index) => (
